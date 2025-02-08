@@ -203,7 +203,6 @@ private:
   Color sideToMove;
   Thread* thisThread;
   StateInfo* st;
-  bool chess960;
 };
 
 //extern std::ostream& operator<<(std::ostream& os, const Position& pos);

@@ -283,7 +283,6 @@ void Position::set(const string& fenStr, Thread* th) {
   // handle also common incorrect FEN with fullmove = 0.
   gamePly = std::max(2 * (gamePly - 1), 0) + (sideToMove == BLACK);
 
-  chess960 = false;
   thisThread = th;
   set_state(st);
 }

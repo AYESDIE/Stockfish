@@ -123,7 +123,6 @@ namespace {
         else if (token == "movetime")  is >> limits.movetime;
         else if (token == "mate")      is >> limits.mate;
         else if (token == "infinite")  limits.infinite = 1;
-        else if (token == "ponder")    limits.ponder = 1;
 
     Threads.start_thinking(pos, limits, SetupStates);
   }

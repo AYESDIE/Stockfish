@@ -304,17 +304,6 @@ void MainThread::search() {
   if (Limits.npmsec)
       Time.availableNodes += Limits.inc[us] - Threads.nodes_searched();
 
-  // When we reach the maximum depth, we can arrive here without a raise of
-  // Signals.stop. However, if we are pondering or in an infinite search,
-  // the UCI protocol states that we shouldn't print the best move before the
-  // GUI sends a "stop" or "ponderhit" command. We therefore simply wait here
-  // until the GUI sends one of those commands (which also raises Signals.stop).
-  if (!Signals.stop && (Limits.ponder || Limits.infinite))
-  {
-      Signals.stopOnPonderhit = true;
-      wait(Signals.stop);
-  }
-
   // Stop the threads if not already stopped
   Signals.stop = true;
 
@@ -340,9 +329,6 @@ void MainThread::search() {
       sync_cout << UCI::pv(bestThread->rootPos, bestThread->completedDepth, -VALUE_INFINITE, VALUE_INFINITE) << sync_endl;
 
   sync_cout << "bestmove " << UCI::move(bestThread->rootMoves[0].pv[0]);
-
-  if (bestThread->rootMoves[0].pv.size() > 1 || bestThread->rootMoves[0].extract_ponder_from_tt(rootPos))
-      std::cout << " ponder " << UCI::move(bestThread->rootMoves[0].pv[1]);
 
   std::cout << sync_endl;
 }
@@ -475,7 +461,6 @@ void Thread::search() {
                   if (mainThread)
                   {
                       mainThread->failedLow = true;
-                      Signals.stopOnPonderhit = false;
                   }
               }
               else if (bestValue >= beta)
@@ -524,7 +509,7 @@ void Thread::search() {
       // Do we have time for the next iteration? Can we stop searching now?
       if (Limits.use_time_management())
       {
-          if (!Signals.stop && !Signals.stopOnPonderhit)
+          if (!Signals.stop)
           {
               // Take some extra time if the best move has changed
               if (rootDepth > 4 * ONE_PLY && multiPV == 1)
@@ -539,12 +524,7 @@ void Thread::search() {
                                                     && mainThread->bestMoveChanges < 0.03
                                                     && Time.elapsed() > Time.available() / 8)))
               {
-                  // If we are allowed to ponder do not stop the search now but
-                  // keep pondering until the GUI sends "ponderhit" or "stop".
-                  if (Limits.ponder)
-                      Signals.stopOnPonderhit = true;
-                  else
-                      Signals.stop = true;
+                Signals.stop = true;
               }
           }
 
@@ -1562,28 +1542,3 @@ void RootMove::insert_pv_in_tt(Position& pos) {
 }
 
 
-/// RootMove::extract_ponder_from_tt() is called in case we have no ponder move
-/// before exiting the search, for instance in case we stop the search during a
-/// fail high at root. We try hard to have a ponder move to return to the GUI,
-/// otherwise in case of 'ponder on' we have nothing to think on.
-
-bool RootMove::extract_ponder_from_tt(Position& pos)
-{
-    StateInfo st;
-    bool ttHit;
-
-    assert(pv.size() == 1);
-
-    pos.do_move(pv[0], st, pos.gives_check(pv[0], CheckInfo(pos)));
-    TTEntry* tte = TT.probe(pos.key(), ttHit);
-    pos.undo_move(pv[0]);
-
-    if (ttHit)
-    {
-        Move m = tte->move(); // Local copy to be SMP safe
-        if (MoveList<LEGAL>(pos).contains(m))
-           return pv.push_back(m), true;
-    }
-
-    return false;
-}
