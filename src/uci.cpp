@@ -32,8 +32,6 @@
 
 using namespace std;
 
-extern void benchmark(const Position& pos, istream& is);
-
 namespace {
 
   // FEN string of the initial position, normal chess
@@ -193,20 +191,8 @@ void UCI::loop(int argc, char* argv[]) {
 
       // Additional custom non-UCI commands, useful for debugging
       else if (token == "flip")       pos.flip();
-      else if (token == "bench")      benchmark(pos, is);
       else if (token == "d")          sync_cout << pos << sync_endl;
       else if (token == "eval")       sync_cout << Eval::trace(pos) << sync_endl;
-      else if (token == "perft")
-      {
-          int depth;
-          stringstream ss;
-
-          is >> depth;
-          ss << Options["Hash"]    << " "
-             << Options["Threads"] << " " << depth << " current perft";
-
-          benchmark(pos, ss);
-      }
       else
           sync_cout << "Unknown command: " << cmd << sync_endl;
 
