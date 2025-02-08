@@ -173,21 +173,6 @@ void Search::init() {
 }
 
 
-/// Search::clear() resets to zero search state, to obtain reproducible results
-
-void Search::clear() {
-
-  TT.clear();
-  CounterMovesHistory.clear();
-
-  for (Thread* th : Threads)
-  {
-      th->history.clear();
-      th->counterMoves.clear();
-  }
-}
-
-
 /// MainThread::search() is called by the main thread when the program receives
 /// the UCI 'go' command. It searches from root position and at the end prints
 /// the "bestmove" to output.

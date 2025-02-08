@@ -35,7 +35,6 @@ UCI::OptionsMap Options; // Global object
 namespace UCI {
 
 /// 'On change' actions, triggered by an option's value change
-void on_clear_hash(const Option&) { Search::clear(); }
 void on_hash_size(const Option& o) { TT.resize(o); }
 void on_threads(const Option&) { Threads.read_uci_options(); }
 //void on_tb_path(const Option& o) { Tablebases::init(o); }
@@ -58,7 +57,6 @@ void init(OptionsMap& o) {
   o["Contempt"]              << Option(0, -100, 100);
   o["Threads"]               << Option(1, 1, 128, on_threads);
   o["Hash"]                  << Option(16, 1, MaxHashMB, on_hash_size);
-  o["Clear Hash"]            << Option(on_clear_hash);
 }
 
 
