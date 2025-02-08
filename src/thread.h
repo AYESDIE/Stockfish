@@ -33,7 +33,9 @@
 #include "pawns.h"
 #include "position.h"
 #include "search.h"
-#include "thread_win32.h"
+
+typedef std::mutex Mutex;
+typedef std::condition_variable ConditionVariable;
 
 
 /// Thread struct keeps together all the thread related stuff. We also use

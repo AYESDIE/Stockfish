@@ -243,7 +243,7 @@ endif
 ifeq ($(optimize),yes)
 
 	ifeq ($(comp),gcc)
-		CXXFLAGS += -O3
+		CXXFLAGS += -Os
 
 		ifeq ($(UNAME),Darwin)
 			ifeq ($(arch),i386)
