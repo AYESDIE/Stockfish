@@ -106,26 +106,6 @@ CheckInfo::CheckInfo(const Position& pos) {
 
 /// operator<<(Position) returns an ASCII representation of the position
 
-std::ostream& operator<<(std::ostream& os, const Position& pos) {
-
-  os << "\n +---+---+---+---+---+---+---+---+\n";
-
-  for (Rank r = RANK_8; r >= RANK_1; --r)
-  {
-      for (File f = FILE_A; f <= FILE_H; ++f)
-          os << " | " << PieceToChar[pos.piece_on(make_square(f, r))];
-
-      os << " |\n +---+---+---+---+---+---+---+---+\n";
-  }
-
-  os << "\nFen: " << pos.fen() << "\nKey: " << std::hex << std::uppercase
-     << std::setfill('0') << std::setw(16) << pos.key() << std::dec << "\nCheckers: ";
-
-  for (Bitboard b = pos.checkers(); b; )
-      os << UCI::square(pop_lsb(&b)) << " ";
-
-  return os;
-}
 
 
 /// Position::init() initializes at startup the various arrays used to compute
@@ -386,53 +366,6 @@ void Position::set_state(StateInfo* si) const {
 
 /// Position::fen() returns a FEN representation of the position. In case of
 /// Chess960 the Shredder-FEN notation is used. This is mainly a debugging function.
-
-const string Position::fen() const {
-
-  int emptyCnt;
-  std::ostringstream ss;
-
-  for (Rank r = RANK_8; r >= RANK_1; --r)
-  {
-      for (File f = FILE_A; f <= FILE_H; ++f)
-      {
-          for (emptyCnt = 0; f <= FILE_H && empty(make_square(f, r)); ++f)
-              ++emptyCnt;
-
-          if (emptyCnt)
-              ss << emptyCnt;
-
-          if (f <= FILE_H)
-              ss << PieceToChar[piece_on(make_square(f, r))];
-      }
-
-      if (r > RANK_1)
-          ss << '/';
-  }
-
-  ss << (sideToMove == WHITE ? " w " : " b ");
-
-  if (can_castle(WHITE_OO))
-      ss << (chess960 ? char('A' + file_of(castling_rook_square(WHITE |  KING_SIDE))) : 'K');
-
-  if (can_castle(WHITE_OOO))
-      ss << (chess960 ? char('A' + file_of(castling_rook_square(WHITE | QUEEN_SIDE))) : 'Q');
-
-  if (can_castle(BLACK_OO))
-      ss << (chess960 ? char('a' + file_of(castling_rook_square(BLACK |  KING_SIDE))) : 'k');
-
-  if (can_castle(BLACK_OOO))
-      ss << (chess960 ? char('a' + file_of(castling_rook_square(BLACK | QUEEN_SIDE))) : 'q');
-
-  if (!can_castle(WHITE) && !can_castle(BLACK))
-      ss << '-';
-
-  ss << (ep_square() == SQ_NONE ? " - " : " " + UCI::square(ep_square()) + " ")
-     << st->rule50 << " " << 1 + (gamePly - (sideToMove == BLACK)) / 2;
-
-  return ss.str();
-}
-
 
 /// Position::game_phase() calculates the game phase interpolating total non-pawn
 /// material between endgame and midgame limits.

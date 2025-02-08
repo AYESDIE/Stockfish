@@ -94,7 +94,7 @@ public:
 
   // FEN string input/output
   void set(const std::string& fenStr, bool isChess960, Thread* th);
-  const std::string fen() const;
+  //const std::string fen() const;
 
   // Position representation
   Bitboard pieces() const;
@@ -207,7 +207,7 @@ private:
   bool chess960;
 };
 
-extern std::ostream& operator<<(std::ostream& os, const Position& pos);
+//extern std::ostream& operator<<(std::ostream& os, const Position& pos);
 
 inline Color Position::side_to_move() const {
   return sideToMove;
