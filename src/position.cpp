@@ -174,7 +174,7 @@ void Position::clear() {
 /// This function is not very robust - make sure that input FENs are correct,
 /// this is assumed to be the responsibility of the GUI.
 
-void Position::set(const string& fenStr, bool isChess960, Thread* th) {
+void Position::set(const string& fenStr, Thread* th) {
 /*
    A FEN string defines a particular position using only the ASCII character set.
 
@@ -283,11 +283,9 @@ void Position::set(const string& fenStr, bool isChess960, Thread* th) {
   // handle also common incorrect FEN with fullmove = 0.
   gamePly = std::max(2 * (gamePly - 1), 0) + (sideToMove == BLACK);
 
-  chess960 = isChess960;
+  chess960 = false;
   thisThread = th;
   set_state(st);
-
-  assert(pos_is_ok());
 }
 
 

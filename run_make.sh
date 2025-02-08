@@ -1,0 +1,1 @@
+cd src && make clean && make build ARCH=x86-32 && make strip && ls -lh stockfish && ls -lh *.o

@@ -89,11 +89,11 @@ public:
   Position() = default; // To define the global object RootPos
   Position(const Position&) = delete;
   Position(const Position& pos, Thread* th) { *this = pos; thisThread = th; }
-  Position(const std::string& f, bool c960, Thread* th) { set(f, c960, th); }
+  Position(const std::string& f, Thread* th) { set(f, th); }
   Position& operator=(const Position&); // To assign RootPos from UCI
 
   // FEN string input/output
-  void set(const std::string& fenStr, bool isChess960, Thread* th);
+  void set(const std::string& fenStr, Thread* th);
   //const std::string fen() const;
 
   // Position representation
@@ -163,7 +163,6 @@ public:
   Color side_to_move() const;
   Phase game_phase() const;
   int game_ply() const;
-  bool is_chess960() const;
   Thread* this_thread() const;
   uint64_t nodes_searched() const;
   void set_nodes_searched(uint64_t n);
@@ -363,10 +362,6 @@ inline bool Position::opposite_bishops() const {
   return   pieceCount[WHITE][BISHOP] == 1
         && pieceCount[BLACK][BISHOP] == 1
         && opposite_colors(square<BISHOP>(WHITE), square<BISHOP>(BLACK));
-}
-
-inline bool Position::is_chess960() const {
-  return chess960;
 }
 
 inline bool Position::capture_or_promotion(Move m) const {
