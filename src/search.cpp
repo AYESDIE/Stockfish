@@ -140,7 +140,6 @@ namespace {
   Value value_from_tt(Value v, int ply);
   void update_pv(Move* pv, Move move, Move* childPv);
   void update_stats(const Position& pos, Stack* ss, Move move, Depth depth, Move* quiets, int quietsCnt);
-  void check_time();
 
 } // namespace
 
@@ -613,8 +612,6 @@ namespace {
     {
         for (Thread* th : Threads)
             th->resetCalls = true;
-
-        check_time();
     }
 
     // Used to send selDepth info to GUI
@@ -1478,33 +1475,6 @@ moves_loop: // When in check search starts from here
     }
 
     return best;
-  }
-
-
-  // check_time() is used to print debug info and, more importantly, to detect
-  // when we are out of available time and thus stop the search.
-
-  void check_time() {
-
-    static TimePoint lastInfoTime = now();
-
-    int elapsed = Time.elapsed();
-    TimePoint tick = Limits.startTime + elapsed;
-
-    if (tick - lastInfoTime >= 1000)
-    {
-        lastInfoTime = tick;
-        dbg_print();
-    }
-
-    // An engine may not stop pondering until told so by the GUI
-    if (Limits.ponder)
-        return;
-
-    if (   (Limits.use_time_management() && elapsed > Time.maximum() - 10)
-        || (Limits.movetime && elapsed >= Limits.movetime)
-        || (Limits.nodes && Threads.nodes_searched() >= Limits.nodes))
-            Signals.stop = true;
   }
 
 } // namespace
