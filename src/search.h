@@ -102,7 +102,6 @@ extern StateStackPtr SetupStates;
 
 void init();
 void clear();
-template<bool Root = true> uint64_t perft(Position& pos, Depth depth);
 
 } // namespace Search
 

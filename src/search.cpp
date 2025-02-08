@@ -188,36 +188,6 @@ void Search::clear() {
 }
 
 
-/// Search::perft() is our utility to verify move generation. All the leaf nodes
-/// up to the given depth are generated and counted and the sum returned.
-template<bool Root>
-uint64_t Search::perft(Position& pos, Depth depth) {
-
-  StateInfo st;
-  uint64_t cnt, nodes = 0;
-  CheckInfo ci(pos);
-  const bool leaf = (depth == 2 * ONE_PLY);
-
-  for (const auto& m : MoveList<LEGAL>(pos))
-  {
-      if (Root && depth <= ONE_PLY)
-          cnt = 1, nodes++;
-      else
-      {
-          pos.do_move(m, st, pos.gives_check(m, ci));
-          cnt = leaf ? MoveList<LEGAL>(pos).size() : perft<false>(pos, depth - ONE_PLY);
-          nodes += cnt;
-          pos.undo_move(m);
-      }
-      if (Root)
-          sync_cout << UCI::move(m) << ": " << cnt << sync_endl;
-  }
-  return nodes;
-}
-
-template uint64_t Search::perft<true>(Position&, Depth);
-
-
 /// MainThread::search() is called by the main thread when the program receives
 /// the UCI 'go' command. It searches from root position and at the end prints
 /// the "bestmove" to output.
@@ -233,9 +203,6 @@ void MainThread::search() {
 
   TB::Hits = 0;
   TB::RootInTB = false;
-  TB::UseRule50 = Options["Syzygy50MoveRule"];
-  TB::ProbeDepth = Options["SyzygyProbeDepth"] * ONE_PLY;
-  TB::Cardinality = Options["SyzygyProbeLimit"];
 
   // Skip TB probing when no TB found: !TBLargest -> !TB::Cardinality
   if (TB::Cardinality > 0)
@@ -315,8 +282,7 @@ void MainThread::search() {
   // Check if there are threads with a better score than main thread
   Thread* bestThread = this;
   if (   !this->easyMovePlayed
-      &&  Options["MultiPV"] == 1
-      && !Skill(Options["Skill Level"]).enabled())
+      && !Skill(20).enabled())
   {
       for (Thread* th : Threads)
           if (   th->completedDepth > bestThread->completedDepth
@@ -360,8 +326,8 @@ void Thread::search() {
       TT.new_search();
   }
 
-  size_t multiPV = Options["MultiPV"];
-  Skill skill(Options["Skill Level"]);
+  size_t multiPV = 1;
+  Skill skill(20);
 
   // When playing with strength handicap enable MultiPV search that we will
   // use behind the scenes to retrieve a set of possible moves.
@@ -1469,7 +1435,7 @@ string UCI::pv(const Position& pos, Depth depth, Value alpha, Value beta) {
   int elapsed = Time.elapsed() + 1;
   const Search::RootMoveVector& rootMoves = pos.this_thread()->rootMoves;
   size_t PVIdx = pos.this_thread()->PVIdx;
-  size_t multiPV = std::min((size_t)Options["MultiPV"], rootMoves.size());
+  size_t multiPV = std::min((size_t)1, rootMoves.size());
   uint64_t nodes_searched = Threads.nodes_searched();
 
   for (size_t i = 0; i < multiPV; ++i)

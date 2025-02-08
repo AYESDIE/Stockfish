@@ -83,10 +83,10 @@ namespace {
 
 void TimeManagement::init(Search::LimitsType& limits, Color us, int ply)
 {
-  int minThinkingTime = Options["Minimum Thinking Time"];
-  int moveOverhead    = Options["Move Overhead"];
-  int slowMover       = Options["Slow Mover"];
-  int npmsec          = Options["nodestime"];
+  int minThinkingTime = 20;
+  int moveOverhead    = 30;
+  int slowMover       = 84;
+  int npmsec          = 0;
 
   // If we have to play in 'nodes as time' mode, then convert from time
   // to nodes, and use resulting values in time management formulas.
