@@ -71,23 +71,8 @@ struct Tie: public streambuf { // MSVC requires split streambuf for cin and cout
 
 const string engine_info(bool to_uci) {
 
-  const string months("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec");
-  string month, day, year;
-  stringstream ss, date(__DATE__); // From compiler, format is "Sep 21 2008"
-
-  ss << "Stockfish " << Version << setfill('0');
-
-  if (Version.empty())
-  {
-      date >> month >> day >> year;
-      ss << setw(2) << day << setw(2) << (1 + months.find(month) / 4) << year.substr(2);
-  }
-
-  ss << (Is64Bit ? " 64" : "")
-     << (HasPext ? " BMI2" : (HasPopCnt ? " POPCNT" : ""))
-     << (to_uci  ? "\nid author ": " by ")
-     << "T. Romstad, M. Costalba, J. Kiiski, G. Linscott";
-
+  stringstream ss;
+  ss << "Stockfish";
   return ss.str();
 }
 

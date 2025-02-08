@@ -173,8 +173,6 @@ public:
   Value non_pawn_material(Color c) const;
 
   // Position consistency check, for debugging
-  bool pos_is_ok(int* failedStep = nullptr) const;
-  void flip();
 
 private:
   // Initialization helpers (used while setting up a position)
