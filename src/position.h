@@ -100,7 +100,6 @@ public:
   // Text input/output
   void set(const std::string& fen, Thread* th);
   const std::string fen() const;
-  const std::string pretty(Move m = MOVE_NONE) const;
 
   // Position representation
   Bitboard pieces() const;

@@ -59,26 +59,6 @@ const string engine_info(bool to_uci) {
 }
 
 
-/// Debug functions used mainly to collect run-time statistics
-
-static uint64_t hits[2], means[2];
-
-void dbg_hit_on(bool b) { hits[0]++; if (b) hits[1]++; }
-void dbg_hit_on_c(bool c, bool b) { if (c) dbg_hit_on(b); }
-void dbg_mean_of(int v) { means[0]++; means[1] += v; }
-
-void dbg_print() {
-
-  if (hits[0])
-      cerr << "Total " << hits[0] << " Hits " << hits[1]
-           << " hit rate (%) " << 100 * hits[1] / hits[0] << endl;
-
-  if (means[0])
-      cerr << "Total " << means[0] << " Mean "
-           << (float)means[1] / means[0] << endl;
-}
-
-
 /// Our fancy logging facility. The trick here is to replace cin.rdbuf() and
 /// cout.rdbuf() with two Tie objects that tie cin and cout to a file stream. We
 /// can toggle the logging of std::cout and std:cin at runtime while preserving

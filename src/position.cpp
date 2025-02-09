@@ -376,44 +376,6 @@ const string Position::fen() const {
   return ss.str();
 }
 
-
-/// Position::pretty() returns an ASCII representation of the position to be
-/// printed to the standard output together with the move's san notation.
-
-const string Position::pretty(Move move) const {
-
-  const string dottedLine =            "\n+---+---+---+---+---+---+---+---+";
-  const string twoRows =  dottedLine + "\n|   | . |   | . |   | . |   | . |"
-                        + dottedLine + "\n| . |   | . |   | . |   | . |   |";
-
-  string brd = twoRows + twoRows + twoRows + twoRows + dottedLine;
-
-  for (Bitboard b = pieces(); b; )
-  {
-      Square s = pop_lsb(&b);
-      brd[513 - 68 * rank_of(s) + 4 * file_of(s)] = PieceToChar[piece_on(s)];
-  }
-
-  std::ostringstream ss;
-
-  if (move)
-      ss << "\nMove: " << (sideToMove == BLACK ? ".." : "")
-         << move_to_san(*const_cast<Position*>(this), move);
-
-  ss << brd << "\nFen: " << fen() << "\nKey: " << std::hex << std::uppercase
-     << std::setfill('0') << std::setw(16) << st->key << "\nCheckers: ";
-
-  for (Bitboard b = checkers(); b; )
-      ss << square_to_string(pop_lsb(&b)) << " ";
-
-  ss << "\nLegal moves: ";
-  for (MoveList<LEGAL> it(*this); *it; ++it)
-      ss << move_to_san(*const_cast<Position*>(this), *it) << " ";
-
-  return ss.str();
-}
-
-
 /// Position:hidden_checkers() returns a bitboard of all pinned / discovery check
 /// pieces, according to the call parameters. Pinned pieces protect our king,
 /// discovery check pieces attack the enemy king.

@@ -29,11 +29,6 @@
 extern const std::string engine_info(bool to_uci = false);
 extern void timed_wait(WaitCondition&, Lock&, int);
 extern void prefetch(char* addr);
-extern void dbg_hit_on(bool b);
-extern void dbg_hit_on_c(bool c, bool b);
-extern void dbg_mean_of(int v);
-extern void dbg_print();
-
 
 struct Log : public std::ofstream {
   Log(const std::string& f = "log.txt") : std::ofstream(f.c_str(), std::ios::out | std::ios::app) {}
