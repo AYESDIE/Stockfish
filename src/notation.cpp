@@ -95,39 +95,3 @@ Move move_from_uci(const Position& pos, string& str) {
 
   return MOVE_NONE;
 }
-
-
-static string time_to_string(int64_t msecs) {
-
-  const int MSecMinute = 1000 * 60;
-  const int MSecHour   = 1000 * 60 * 60;
-
-  int64_t hours   =   msecs / MSecHour;
-  int64_t minutes =  (msecs % MSecHour) / MSecMinute;
-  int64_t seconds = ((msecs % MSecHour) % MSecMinute) / 1000;
-
-  stringstream s;
-
-  if (hours)
-      s << hours << ':';
-
-  s << setfill('0') << setw(2) << minutes << ':' << setw(2) << seconds;
-
-  return s.str();
-}
-
-static string score_to_string(Value v) {
-
-  stringstream s;
-
-  if (v >= VALUE_MATE_IN_MAX_PLY)
-      s << "#" << (VALUE_MATE - v + 1) / 2;
-
-  else if (v <= VALUE_MATED_IN_MAX_PLY)
-      s << "-#" << (VALUE_MATE + v) / 2;
-
-  else
-      s << setprecision(2) << fixed << showpos << float(v) / PawnValueMg;
-
-  return s.str();
-}

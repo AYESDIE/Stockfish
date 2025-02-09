@@ -1242,11 +1242,3 @@ bool Position::is_draw() const {
 
   return false;
 }
-
-
-/// Position::flip() flips position with the white and black sides reversed. This
-/// is only useful for debugging especially for finding evaluation symmetry bugs.
-
-static char toggle_case(char c) {
-  return char(islower(c) ? toupper(c) : tolower(c));
-}

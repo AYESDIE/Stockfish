@@ -41,8 +41,6 @@ namespace {
     std::stringstream stream;
 
     void add(int idx, Score term_w, Score term_b = SCORE_ZERO);
-    void row(const char* name, int idx);
-    std::string do_trace(const Position& pos);
   }
 
   // Struct EvalInfo contains various information computed and collected
@@ -1103,65 +1101,5 @@ Value do_evaluate(const Position& pos, Value& margin) {
 
     scores[WHITE][idx] = wScore;
     scores[BLACK][idx] = bScore;
-  }
-
-  void Tracing::row(const char* name, int idx) {
-
-    Score wScore = scores[WHITE][idx];
-    Score bScore = scores[BLACK][idx];
-
-    switch (idx) {
-    case PST: case IMBALANCE: case PAWN: case UNSTOPPABLE: case TOTAL:
-        stream << std::setw(20) << name << " |   ---   --- |   ---   --- | "
-               << std::setw(6)  << to_cp(mg_value(wScore)) << " "
-               << std::setw(6)  << to_cp(eg_value(wScore)) << " \n";
-        break;
-    default:
-        stream << std::setw(20) << name << " | " << std::noshowpos
-               << std::setw(5)  << to_cp(mg_value(wScore)) << " "
-               << std::setw(5)  << to_cp(eg_value(wScore)) << " | "
-               << std::setw(5)  << to_cp(mg_value(bScore)) << " "
-               << std::setw(5)  << to_cp(eg_value(bScore)) << " | "
-               << std::showpos
-               << std::setw(6)  << to_cp(mg_value(wScore - bScore)) << " "
-               << std::setw(6)  << to_cp(eg_value(wScore - bScore)) << " \n";
-    }
-  }
-
-  std::string Tracing::do_trace(const Position& pos) {
-
-    stream.str("");
-    stream << std::showpoint << std::showpos << std::fixed << std::setprecision(2);
-    std::memset(scores, 0, 2 * (TOTAL + 1) * sizeof(Score));
-
-    Value margin;
-    do_evaluate<true>(pos, margin);
-
-    std::string totals = stream.str();
-    stream.str("");
-
-    stream << std::setw(21) << "Eval term " << "|    White    |    Black    |     Total     \n"
-                    <<             "                     |   MG    EG  |   MG    EG  |   MG     EG   \n"
-                    <<             "---------------------+-------------+-------------+---------------\n";
-
-    row("Material, PST, Tempo", PST);
-    row("Material imbalance", IMBALANCE);
-    row("Pawns", PAWN);
-    row("Knights", KNIGHT);
-    row("Bishops", BISHOP);
-    row("Rooks", ROOK);
-    row("Queens", QUEEN);
-    row("Mobility", MOBILITY);
-    row("King safety", KING);
-    row("Threats", THREAT);
-    row("Passed pawns", PASSED);
-    row("Unstoppable pawns", UNSTOPPABLE);
-    row("Space", SPACE);
-
-    stream <<             "---------------------+-------------+-------------+---------------\n";
-    row("Total", TOTAL);
-    stream << totals;
-
-    return stream.str();
   }
 }
