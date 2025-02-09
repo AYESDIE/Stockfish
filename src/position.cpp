@@ -1296,37 +1296,6 @@ static char toggle_case(char c) {
   return char(islower(c) ? toupper(c) : tolower(c));
 }
 
-void Position::flip() {
-
-  string f, token;
-  std::stringstream ss(fen());
-
-  for (Rank rank = RANK_8; rank >= RANK_1; rank--) // Piece placement
-  {
-      std::getline(ss, token, rank > RANK_1 ? '/' : ' ');
-      f.insert(0, token + (f.empty() ? " " : "/"));
-  }
-
-  ss >> token; // Active color
-  f += (token == "w" ? "B " : "W "); // Will be lowercased later
-
-  ss >> token; // Castling availability
-  f += token + " ";
-
-  std::transform(f.begin(), f.end(), f.begin(), toggle_case);
-
-  ss >> token; // En passant square
-  f += (token == "-" ? token : token.replace(1, 1, token[1] == '3' ? "6" : "3"));
-
-  std::getline(ss, token); // Half and full moves
-  f += token;
-
-  set(f, this_thread());
-
-  assert(pos_is_ok());
-}
-
-
 /// Position::pos_is_ok() performs some consitency checks for the position object.
 /// This is meant to be helpful when debugging.
 

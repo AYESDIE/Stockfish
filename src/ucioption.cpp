@@ -52,7 +52,6 @@ bool CaseInsensitiveLess::operator() (const string& s1, const string& s2) const 
 /// init() initializes the UCI options to their hard coded default values
 
 void init(OptionsMap& o) {
-
   o["Search Log Filename"]         = Option("SearchLog.txt");
   o["Contempt Factor"]             = Option(0, -50,  50);
   o["Mobility (Midgame)"]          = Option(100, 0, 200, on_eval);
@@ -68,7 +67,7 @@ void init(OptionsMap& o) {
   o["Max Threads per Split Point"] = Option(5, 4,  8, on_threads);
   o["Threads"]                     = Option(1, 1, MAX_THREADS, on_threads);
   o["Idle Threads Sleep"]          = Option(false);
-  o["Hash"]                        = Option(32, 1, 8192, on_hash_size);
+  o["Hash"]                        = Option(2, 1, 4, on_hash_size);
   o["Clear Hash"]                  = Option(on_clear_hash);
   o["Ponder"]                      = Option(false);
   o["MultiPV"]                     = Option(1, 1, 500);

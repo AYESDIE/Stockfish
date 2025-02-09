@@ -183,7 +183,6 @@ public:
 
   // Position consistency check, for debugging
   bool pos_is_ok(int* failedStep = NULL) const;
-  void flip();
 
 private:
   // Initialization helpers (used while setting up a position)
