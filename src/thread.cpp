@@ -211,9 +211,9 @@ void ThreadPool::exit() {
 
 void ThreadPool::read_uci_options() {
 
-  maxThreadsPerSplitPoint = Options["Max Threads per Split Point"];
-  minimumSplitDepth       = Options["Min Split Depth"] * ONE_PLY;
-  size_t requested        = Options["Threads"];
+  maxThreadsPerSplitPoint = 5;
+  minimumSplitDepth       = DEPTH_ZERO;
+  size_t requested        = 1;
 
   assert(requested > 0);
 

@@ -111,12 +111,7 @@ namespace {
 
     is >> token;
 
-    if (token == "startpos")
-    {
-        fen = StartFEN;
-        is >> token; // Consume "moves" token if any
-    }
-    else if (token == "fen")
+    if (token == "fen")
         while (is >> token && token != "moves")
             fen += token + " ";
     else

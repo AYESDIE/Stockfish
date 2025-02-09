@@ -252,7 +252,7 @@ namespace {
 
   Value interpolate(const Score& v, Phase ph, ScaleFactor sf);
   Score apply_weight(Score v, Score w);
-  Score weight_option(const std::string& mgOpt, const std::string& egOpt, Score internalWeight);
+  Score weight_option(const int mgOpt, const int egOpt, Score internalWeight);
   double to_cp(Value v);
 }
 
@@ -273,12 +273,12 @@ namespace Eval {
 
   void init() {
 
-    Weights[Mobility]       = weight_option("Mobility (Midgame)", "Mobility (Endgame)", WeightsInternal[Mobility]);
-    Weights[PawnStructure]  = weight_option("Pawn Structure (Midgame)", "Pawn Structure (Endgame)", WeightsInternal[PawnStructure]);
-    Weights[PassedPawns]    = weight_option("Passed Pawns (Midgame)", "Passed Pawns (Endgame)", WeightsInternal[PassedPawns]);
-    Weights[Space]          = weight_option("Space", "Space", WeightsInternal[Space]);
-    Weights[KingDangerUs]   = weight_option("Cowardice", "Cowardice", WeightsInternal[KingDangerUs]);
-    Weights[KingDangerThem] = weight_option("Aggressiveness", "Aggressiveness", WeightsInternal[KingDangerThem]);
+    Weights[Mobility]       = weight_option(100, 100, WeightsInternal[Mobility]);
+    Weights[PawnStructure]  = weight_option(100, 100, WeightsInternal[PawnStructure]);
+    Weights[PassedPawns]    = weight_option(100, 100, WeightsInternal[PassedPawns]);
+    Weights[Space]          = weight_option(100, 100, WeightsInternal[Space]);
+    Weights[KingDangerUs]   = weight_option(100, 100, WeightsInternal[KingDangerUs]);
+    Weights[KingDangerThem] = weight_option(100, 100, WeightsInternal[KingDangerThem]);
 
     const int MaxSlope = 30;
     const int Peak = 1280;
@@ -1083,11 +1083,11 @@ Value do_evaluate(const Position& pos, Value& margin) {
   // weight_option() computes the value of an evaluation weight, by combining
   // two UCI-configurable weights (midgame and endgame) with an internal weight.
 
-  Score weight_option(const std::string& mgOpt, const std::string& egOpt, Score internalWeight) {
+  Score weight_option(const int mgOpt, const int egOpt, Score internalWeight) {
 
     // Scale option value from 100 to 256
-    int mg = Options[mgOpt] * 256 / 100;
-    int eg = Options[egOpt] * 256 / 100;
+    int mg = mgOpt * 256 / 100;
+    int eg = egOpt * 256 / 100;
 
     return apply_weight(make_score(mg, eg), internalWeight);
   }

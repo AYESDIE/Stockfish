@@ -132,9 +132,6 @@ void TimeManager::init(const Search::LimitsType& limits, int currentPly, Color u
       maximumSearchTime = std::min(maximumSearchTime, t2);
   }
 
-  if (Options["Ponder"])
-      optimumSearchTime += optimumSearchTime / 4;
-
   // Make sure that maxSearchTime is not over absoluteMaxSearchTime
   optimumSearchTime = std::min(optimumSearchTime, maximumSearchTime);
 }

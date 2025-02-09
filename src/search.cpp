@@ -1446,7 +1446,7 @@ moves_loop: // When in check and at SpNode search starts from here
 
     std::stringstream s;
     Time::point elapsed = Time::now() - SearchTime + 1;
-    size_t uciPVSize = std::min((size_t)Options["MultiPV"], RootMoves.size());
+    size_t uciPVSize = std::min((size_t)1, RootMoves.size());
     int selDepth = 0;
 
     for (size_t i = 0; i < Threads.size(); i++)
