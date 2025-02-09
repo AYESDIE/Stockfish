@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
   Search::init();
   Eval::init();
   Threads.init();
-  TT.set_size(2);
+  TT.set_size(1);
 
   std::string args;
 
