@@ -176,27 +176,8 @@ void Search::think() {
       goto finalize;
   }
 
-  if (Options["Contempt Factor"] && !Options["UCI_AnalyseMode"])
-  {
-      int cf = Options["Contempt Factor"] * PawnValueMg / 100; // From centipawns
-      cf = cf * Material::game_phase(RootPos) / PHASE_MIDGAME; // Scale down with phase
-      DrawValue[ RootColor] = VALUE_DRAW - Value(cf);
-      DrawValue[~RootColor] = VALUE_DRAW + Value(cf);
-  }
-  else
-      DrawValue[WHITE] = DrawValue[BLACK] = VALUE_DRAW;
 
-  if (false)
-  {
-      Log log(Options["Search Log Filename"]);
-      log << "\nSearching: "  << RootPos.fen()
-          << "\ninfinite: "   << Limits.infinite
-          << " ponder: "      << Limits.ponder
-          << " time: "        << Limits.time[RootColor]
-          << " increment: "   << Limits.inc[RootColor]
-          << " moves to go: " << Limits.movestogo
-          << std::endl;
-  }
+  DrawValue[WHITE] = DrawValue[BLACK] = VALUE_DRAW;
 
   // Reset the threads, still sleeping: will be wake up at split time
   for (size_t i = 0; i < Threads.size(); i++)
@@ -217,21 +198,6 @@ void Search::think() {
 
   Threads.timer->msec = 0; // Stop the timer
   Threads.sleepWhileIdle = true; // Send idle threads to sleep
-
-  if (false)
-  {
-      Time::point elapsed = Time::now() - SearchTime + 1;
-
-      Log log(Options["Search Log Filename"]);
-      log << "Nodes: "          << RootPos.nodes_searched()
-          << "\nNodes/second: " << RootPos.nodes_searched() * 1000 / elapsed
-          << "\nBest move: "    << move_to_san(RootPos, RootMoves[0].pv[0]);
-
-      StateInfo st;
-      RootPos.do_move(RootMoves[0].pv[0], st);
-      log << "\nPonder move: " << move_to_san(RootPos, RootMoves[0].pv[1]) << std::endl;
-      RootPos.undo_move(RootMoves[0].pv[0]);
-  }
 
 finalize:
 
@@ -374,17 +340,6 @@ namespace {
         // Do we need to pick now the sub-optimal best move ?
         if (skill.enabled() && skill.time_to_pick(depth))
             skill.pick_move();
-
-        if (false)
-        {
-            RootMove& rm = RootMoves[0];
-            if (skill.best != MOVE_NONE)
-                rm = *std::find(RootMoves.begin(), RootMoves.end(), skill.best);
-
-            Log log(Options["Search Log Filename"]);
-            log << pretty_pv(pos, depth, rm.score, Time::now() - SearchTime, &rm.pv[0])
-                << std::endl;
-        }
 
         // Do we have found a "mate in x"?
         if (   Limits.mate

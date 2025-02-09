@@ -53,7 +53,6 @@ bool CaseInsensitiveLess::operator() (const string& s1, const string& s2) const 
 
 void init(OptionsMap& o) {
   o["Search Log Filename"]         = Option("SearchLog.txt");
-  o["Contempt Factor"]             = Option(0, -50,  50);
   o["Mobility (Midgame)"]          = Option(100, 0, 200, on_eval);
   o["Mobility (Endgame)"]          = Option(100, 0, 200, on_eval);
   o["Pawn Structure (Midgame)"]    = Option(100, 0, 200, on_eval);
@@ -70,7 +69,6 @@ void init(OptionsMap& o) {
   o["Hash"]                        = Option(2, 1, 4, on_hash_size);
   o["Clear Hash"]                  = Option(on_clear_hash);
   o["Ponder"]                      = Option(false);
-  o["UCI_AnalyseMode"]             = Option(false, on_eval);
 }
 
 
