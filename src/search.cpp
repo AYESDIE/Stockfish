@@ -281,8 +281,8 @@ namespace {
     Gains.clear();
     Countermoves.clear();
 
-    PVSize = Options["MultiPV"];
-    Skill skill(Options["Skill Level"]);
+    PVSize = 1;
+    Skill skill(20);
 
     // Do we have to play with skill handicap? In this case enable MultiPV search
     // that we will use behind the scenes to retrieve a set of possible moves.

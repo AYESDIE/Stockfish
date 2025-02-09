@@ -103,11 +103,11 @@ void TimeManager::init(const Search::LimitsType& limits, int currentPly, Color u
   int hypMTG, hypMyTime, t1, t2;
 
   // Read uci parameters
-  int emergencyMoveHorizon = Options["Emergency Move Horizon"];
-  int emergencyBaseTime    = Options["Emergency Base Time"];
-  int emergencyMoveTime    = Options["Emergency Move Time"];
-  int minThinkingTime      = Options["Minimum Thinking Time"];
-  int slowMover            = Options["Slow Mover"];
+  int emergencyMoveHorizon = 40;
+  int emergencyBaseTime    = 200;
+  int emergencyMoveTime    = 70;
+  int minThinkingTime      = 20;
+  int slowMover            = 10;
 
   // Initialize to maximum values but unstablePVExtraTime that is reset
   unstablePVExtraTime = 0;

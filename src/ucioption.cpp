@@ -70,13 +70,6 @@ void init(OptionsMap& o) {
   o["Hash"]                        = Option(2, 1, 4, on_hash_size);
   o["Clear Hash"]                  = Option(on_clear_hash);
   o["Ponder"]                      = Option(false);
-  o["MultiPV"]                     = Option(1, 1, 500);
-  o["Skill Level"]                 = Option(20, 0, 20);
-  o["Emergency Move Horizon"]      = Option(40, 0, 50);
-  o["Emergency Base Time"]         = Option(200, 0, 30000);
-  o["Emergency Move Time"]         = Option(70, 0, 5000);
-  o["Minimum Thinking Time"]       = Option(20, 0, 5000);
-  o["Slow Mover"]                  = Option(100, 10, 1000);
   o["UCI_AnalyseMode"]             = Option(false, on_eval);
 }
 
