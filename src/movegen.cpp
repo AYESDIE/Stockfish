@@ -258,16 +258,10 @@ namespace {
 
     if (Type != CAPTURES && Type != EVASIONS && pos.can_castle(Us))
     {
-        if (pos.is_chess960())
-        {
-            mlist = generate_castle< KING_SIDE, Checks, true>(pos, mlist, Us);
-            mlist = generate_castle<QUEEN_SIDE, Checks, true>(pos, mlist, Us);
-        }
-        else
-        {
-            mlist = generate_castle< KING_SIDE, Checks, false>(pos, mlist, Us);
-            mlist = generate_castle<QUEEN_SIDE, Checks, false>(pos, mlist, Us);
-        }
+       
+        mlist = generate_castle< KING_SIDE, Checks, false>(pos, mlist, Us);
+        mlist = generate_castle<QUEEN_SIDE, Checks, false>(pos, mlist, Us);
+
     }
 
     return mlist;

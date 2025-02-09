@@ -29,8 +29,6 @@
 extern const std::string engine_info(bool to_uci = false);
 extern void timed_wait(WaitCondition&, Lock&, int);
 extern void prefetch(char* addr);
-extern void start_logger(bool b);
-
 extern void dbg_hit_on(bool b);
 extern void dbg_hit_on_c(bool c, bool b);
 extern void dbg_mean_of(int v);

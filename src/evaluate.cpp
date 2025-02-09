@@ -580,17 +580,7 @@ Value do_evaluate(const Position& pos, Value& margin) {
         // An important Chess960 pattern: A cornered bishop blocked by a friendly
         // pawn diagonally in front of it is a very serious problem, especially
         // when that pawn is also blocked.
-        if (   Piece == BISHOP
-            && pos.is_chess960()
-            && (s == relative_square(Us, SQ_A1) || s == relative_square(Us, SQ_H1)))
-        {
-            const enum Piece P = make_piece(Us, PAWN);
-            Square d = pawn_push(Us) + (file_of(s) == FILE_A ? DELTA_E : DELTA_W);
-            if (pos.piece_on(s + d) == P)
-                score -= !pos.is_empty(s + d + pawn_push(Us)) ? TrappedBishopA1H1 * 4
-                        : pos.piece_on(s + d + d) == P        ? TrappedBishopA1H1 * 2
-                                                              : TrappedBishopA1H1;
-        }
+        
     }
 
     if (Trace)

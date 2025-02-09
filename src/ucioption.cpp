@@ -34,8 +34,7 @@ UCI::OptionsMap Options; // Global object
 
 namespace UCI {
 
-/// 'On change' actions, triggered by an option's value change
-void on_logger(const Option& o) { start_logger(o); }
+
 void on_eval(const Option&) { Eval::init(); }
 void on_threads(const Option&) { Threads.read_uci_options(); }
 void on_hash_size(const Option& o) { TT.set_size(o); }
@@ -54,11 +53,7 @@ bool CaseInsensitiveLess::operator() (const string& s1, const string& s2) const 
 
 void init(OptionsMap& o) {
 
-  o["Write Debug Log"]             = Option(false, on_logger);
-  o["Write Search Log"]            = Option(false);
   o["Search Log Filename"]         = Option("SearchLog.txt");
-  o["Book File"]                   = Option("book.bin");
-  o["Best Book Move"]              = Option(false);
   o["Contempt Factor"]             = Option(0, -50,  50);
   o["Mobility (Midgame)"]          = Option(100, 0, 200, on_eval);
   o["Mobility (Endgame)"]          = Option(100, 0, 200, on_eval);
@@ -75,8 +70,7 @@ void init(OptionsMap& o) {
   o["Idle Threads Sleep"]          = Option(false);
   o["Hash"]                        = Option(32, 1, 8192, on_hash_size);
   o["Clear Hash"]                  = Option(on_clear_hash);
-  o["Ponder"]                      = Option(true);
-  o["OwnBook"]                     = Option(false);
+  o["Ponder"]                      = Option(false);
   o["MultiPV"]                     = Option(1, 1, 500);
   o["Skill Level"]                 = Option(20, 0, 20);
   o["Emergency Move Horizon"]      = Option(40, 0, 50);
@@ -84,7 +78,6 @@ void init(OptionsMap& o) {
   o["Emergency Move Time"]         = Option(70, 0, 5000);
   o["Minimum Thinking Time"]       = Option(20, 0, 5000);
   o["Slow Mover"]                  = Option(100, 10, 1000);
-  o["UCI_Chess960"]                = Option(false);
   o["UCI_AnalyseMode"]             = Option(false, on_eval);
 }
 

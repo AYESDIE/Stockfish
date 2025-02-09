@@ -58,7 +58,7 @@ string score_to_uci(Value v, Value alpha, Value beta) {
 /// in the e1g1 notation in normal chess mode, and in e1h1 notation in chess960
 /// mode. Internally castle moves are always coded as "king captures rook".
 
-const string move_to_uci(Move m, bool chess960) {
+const string move_to_uci(Move m) {
 
   Square from = from_sq(m);
   Square to = to_sq(m);
@@ -69,7 +69,7 @@ const string move_to_uci(Move m, bool chess960) {
   if (m == MOVE_NULL)
       return "0000";
 
-  if (type_of(m) == CASTLE && !chess960)
+  if (type_of(m) == CASTLE)
       to = (to > from ? FILE_G : FILE_C) | rank_of(from);
 
   string move = square_to_string(from) + square_to_string(to);
@@ -90,7 +90,7 @@ Move move_from_uci(const Position& pos, string& str) {
       str[4] = char(tolower(str[4]));
 
   for (MoveList<LEGAL> it(pos); *it; ++it)
-      if (str == move_to_uci(*it, pos.is_chess960()))
+      if (str == move_to_uci(*it))
           return *it;
 
   return MOVE_NONE;

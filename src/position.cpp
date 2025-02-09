@@ -178,7 +178,7 @@ Position& Position::operator=(const Position& pos) {
 /// This function is not very robust - make sure that input FENs are correct,
 /// this is assumed to be the responsibility of the GUI.
 
-void Position::set(const string& fenStr, bool isChess960, Thread* th) {
+void Position::set(const string& fenStr, Thread* th) {
 /*
    A FEN string defines a particular position using only the ASCII character set.
 
@@ -293,7 +293,6 @@ void Position::set(const string& fenStr, bool isChess960, Thread* th) {
   st->npMaterial[WHITE] = compute_non_pawn_material(WHITE);
   st->npMaterial[BLACK] = compute_non_pawn_material(BLACK);
   st->checkersBB = attackers_to(king_square(sideToMove)) & pieces(~sideToMove);
-  chess960 = isChess960;
   thisThread = th;
 
   assert(pos_is_ok());
@@ -360,16 +359,16 @@ const string Position::fen() const {
   ss << (sideToMove == WHITE ? " w " : " b ");
 
   if (can_castle(WHITE_OO))
-      ss << (chess960 ? file_to_char(file_of(castle_rook_square(WHITE,  KING_SIDE)), false) : 'K');
+      ss << 'K';
 
   if (can_castle(WHITE_OOO))
-      ss << (chess960 ? file_to_char(file_of(castle_rook_square(WHITE, QUEEN_SIDE)), false) : 'Q');
+      ss << 'Q';
 
   if (can_castle(BLACK_OO))
-      ss << (chess960 ? file_to_char(file_of(castle_rook_square(BLACK,  KING_SIDE)),  true) : 'k');
+      ss << 'k';
 
   if (can_castle(BLACK_OOO))
-      ss << (chess960 ? file_to_char(file_of(castle_rook_square(BLACK, QUEEN_SIDE)),  true) : 'q');
+      ss << 'q';
 
   if (st->castleRights == CASTLES_NONE)
       ss << '-';
@@ -1322,7 +1321,7 @@ void Position::flip() {
   std::getline(ss, token); // Half and full moves
   f += token;
 
-  set(f, is_chess960(), this_thread());
+  set(f, this_thread());
 
   assert(pos_is_ok());
 }

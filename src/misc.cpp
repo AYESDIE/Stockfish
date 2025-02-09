@@ -108,35 +108,6 @@ struct Tie: public streambuf { // MSVC requires splitted streambuf for cin and c
   }
 };
 
-class Logger {
-
-  Logger() : in(cin.rdbuf(), &file), out(cout.rdbuf(), &file) {}
- ~Logger() { start(false); }
-
-  ofstream file;
-  Tie in, out;
-
-public:
-  static void start(bool b) {
-
-    static Logger l;
-
-    if (b && !l.file.is_open())
-    {
-        l.file.open("io_log.txt", ifstream::out | ifstream::app);
-        cin.rdbuf(&l.in);
-        cout.rdbuf(&l.out);
-    }
-    else if (!b && l.file.is_open())
-    {
-        cout.rdbuf(l.out.buf);
-        cin.rdbuf(l.in.buf);
-        l.file.close();
-    }
-  }
-};
-
-
 /// Used to serialize access to std::cout to avoid multiple threads to write at
 /// the same time.
 
@@ -152,11 +123,6 @@ std::ostream& operator<<(std::ostream& os, SyncCout sc) {
 
   return os;
 }
-
-
-/// Trampoline helper to avoid moving Logger to misc.h
-void start_logger(bool b) { Logger::start(b); }
-
 
 /// timed_wait() waits for msec milliseconds. It is mainly an helper to wrap
 /// conversion from milliseconds to struct timespec, as used by pthreads.

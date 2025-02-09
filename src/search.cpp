@@ -24,7 +24,6 @@
 #include <iostream>
 #include <sstream>
 
-#include "book.h"
 #include "evaluate.h"
 #include "movegen.h"
 #include "movepick.h"
@@ -34,6 +33,7 @@
 #include "thread.h"
 #include "tt.h"
 #include "ucioption.h"
+#include "rkiss.h"
 
 namespace Search {
 
@@ -187,9 +187,6 @@ size_t Search::perft(Position& pos, Depth depth) {
 /// searches from RootPos and at the end prints the "bestmove" to output.
 
 void Search::think() {
-
-  static PolyglotBook book; // Defined static to initialize the PRNG only once
-
   RootColor = RootPos.side_to_move();
   TimeMgr.init(Limits, RootPos.game_ply(), RootColor);
 
@@ -203,17 +200,6 @@ void Search::think() {
       goto finalize;
   }
 
-  if (Options["OwnBook"] && !Limits.infinite && !Limits.mate)
-  {
-      Move bookMove = book.probe(RootPos, Options["Book File"], Options["Best Book Move"]);
-
-      if (bookMove && std::count(RootMoves.begin(), RootMoves.end(), bookMove))
-      {
-          std::swap(RootMoves[0], *std::find(RootMoves.begin(), RootMoves.end(), bookMove));
-          goto finalize;
-      }
-  }
-
   if (Options["Contempt Factor"] && !Options["UCI_AnalyseMode"])
   {
       int cf = Options["Contempt Factor"] * PawnValueMg / 100; // From centipawns
@@ -224,7 +210,7 @@ void Search::think() {
   else
       DrawValue[WHITE] = DrawValue[BLACK] = VALUE_DRAW;
 
-  if (Options["Write Search Log"])
+  if (false)
   {
       Log log(Options["Search Log Filename"]);
       log << "\nSearching: "  << RootPos.fen()
@@ -256,7 +242,7 @@ void Search::think() {
   Threads.timer->msec = 0; // Stop the timer
   Threads.sleepWhileIdle = true; // Send idle threads to sleep
 
-  if (Options["Write Search Log"])
+  if (false)
   {
       Time::point elapsed = Time::now() - SearchTime + 1;
 
@@ -289,8 +275,8 @@ finalize:
   }
 
   // Best move could be MOVE_NONE when searching on a stalemate position
-  sync_cout << "bestmove " << move_to_uci(RootMoves[0].pv[0], RootPos.is_chess960())
-            << " ponder "  << move_to_uci(RootMoves[0].pv[1], RootPos.is_chess960())
+  sync_cout << "bestmove " << move_to_uci(RootMoves[0].pv[0])
+            << " ponder "  << move_to_uci(RootMoves[0].pv[1])
             << sync_endl;
 }
 
@@ -413,7 +399,7 @@ namespace {
         if (skill.enabled() && skill.time_to_pick(depth))
             skill.pick_move();
 
-        if (Options["Write Search Log"])
+        if (false)
         {
             RootMove& rm = RootMoves[0];
             if (skill.best != MOVE_NONE)
@@ -819,7 +805,7 @@ moves_loop: // When in check and at SpNode search starts from here
 
           if (thisThread == Threads.main() && Time::now() - SearchTime > 3000)
               sync_cout << "info depth " << depth / ONE_PLY
-                        << " currmove " << move_to_uci(move, pos.is_chess960())
+                        << " currmove " << move_to_uci(move)
                         << " currmovenumber " << moveCount + PVIdx << sync_endl;
       }
 
@@ -1559,7 +1545,7 @@ moves_loop: // When in check and at SpNode search starts from here
           << " pv";
 
         for (size_t j = 0; RootMoves[i].pv[j] != MOVE_NONE; j++)
-            s <<  " " << move_to_uci(RootMoves[i].pv[j], pos.is_chess960());
+            s <<  " " << move_to_uci(RootMoves[i].pv[j]);
     }
 
     return s.str();

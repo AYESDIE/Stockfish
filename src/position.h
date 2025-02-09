@@ -93,12 +93,12 @@ class Position {
 public:
   Position() {}
   Position(const Position& p, Thread* t) { *this = p; thisThread = t; }
-  Position(const std::string& f, bool c960, Thread* t) { set(f, c960, t); }
+  Position(const std::string& f, Thread* t) { set(f, t); }
   Position& operator=(const Position&);
   static void init();
 
   // Text input/output
-  void set(const std::string& fen, bool isChess960, Thread* th);
+  void set(const std::string& fen, Thread* th);
   const std::string fen() const;
   const std::string pretty(Move m = MOVE_NONE) const;
 
@@ -175,7 +175,7 @@ public:
   // Other properties of the position
   Color side_to_move() const;
   int game_ply() const;
-  bool is_chess960() const;
+
   Thread* this_thread() const;
   int64_t nodes_searched() const;
   void set_nodes_searched(int64_t n);
@@ -224,7 +224,7 @@ private:
   Color sideToMove;
   Thread* thisThread;
   StateInfo* st;
-  int chess960;
+
 };
 
 inline int64_t Position::nodes_searched() const {
@@ -391,9 +391,6 @@ inline bool Position::pawn_on_7th(Color c) const {
   return pieces(c, PAWN) & rank_bb(relative_rank(c, RANK_7));
 }
 
-inline bool Position::is_chess960() const {
-  return chess960;
-}
 
 inline bool Position::is_capture_or_promotion(Move m) const {
 

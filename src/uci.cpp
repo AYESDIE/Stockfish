@@ -31,8 +31,6 @@
 
 using namespace std;
 
-extern void benchmark(const Position& pos, istream& is);
-
 namespace {
 
   // FEN string of the initial position, normal chess
@@ -55,7 +53,7 @@ namespace {
 
 void UCI::loop(const string& args) {
 
-  Position pos(StartFEN, false, Threads.main()); // The root position
+  Position pos(StartFEN, Threads.main()); // The root position
   string token, cmd = args;
 
   do {
@@ -81,15 +79,6 @@ void UCI::loop(const string& args) {
           else
               Search::Limits.ponder = false;
       }
-      else if (token == "perft" && (is >> token)) // Read perft depth
-      {
-          stringstream ss;
-
-          ss << Options["Hash"]    << " "
-             << Options["Threads"] << " " << token << " current perft";
-
-          benchmark(pos, ss);
-      }
       else if (token == "key")
           sync_cout << hex << uppercase << setfill('0')
                     << "position key: "   << setw(16) << pos.key()
@@ -112,7 +101,6 @@ void UCI::loop(const string& args) {
       else if (token == "position")   position(pos, is);
       else if (token == "setoption")  setoption(is);
       else if (token == "flip")       pos.flip();
-      else if (token == "bench")      benchmark(pos, is);
       else if (token == "d")          sync_cout << pos.pretty() << sync_endl;
       else if (token == "isready")    sync_cout << "readyok" << sync_endl;
       else
@@ -149,7 +137,7 @@ namespace {
     else
         return;
 
-    pos.set(fen, Options["UCI_Chess960"], Threads.main());
+    pos.set(fen, Threads.main());
     SetupStates = Search::StateStackPtr(new std::stack<StateInfo>());
 
     // Parse move list (if any)
