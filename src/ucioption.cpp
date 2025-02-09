@@ -82,11 +82,11 @@ std::ostream& operator<<(std::ostream& os, const OptionsMap& om) {
 
 /// Option c'tors and conversion operators
 
-Option::Option(const char* v, Fn* f) : type("string"), min(0), max(0), idx(Options.size()), on_change(f)
-{ defaultValue = currentValue = v; }
+// Option::Option(const char* v, Fn* f) : type("string"), min(0), max(0), idx(Options.size()), on_change(f)
+// { defaultValue = currentValue = v; }
 
-Option::Option(bool v, Fn* f) : type("check"), min(0), max(0), idx(Options.size()), on_change(f)
-{ defaultValue = currentValue = (v ? "true" : "false"); }
+// Option::Option(bool v, Fn* f) : type("check"), min(0), max(0), idx(Options.size()), on_change(f)
+// { defaultValue = currentValue = (v ? "true" : "false"); }
 
 Option::Option(Fn* f) : type("button"), min(0), max(0), idx(Options.size()), on_change(f)
 {}

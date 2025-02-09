@@ -85,7 +85,6 @@ void UCI::loop(const string& args) {
 
       else if (token == "go")         go(pos, is);
       else if (token == "position")   position(pos, is);
-      else if (token == "setoption")  setoption(is);
       else if (token == "isready")    sync_cout << "readyok" << sync_endl;
       else
           sync_cout << "Unknown command: " << cmd << sync_endl;
@@ -126,35 +125,6 @@ namespace {
         pos.do_move(m, SetupStates->top());
     }
   }
-
-
-  // setoption() is called when engine receives the "setoption" UCI command. The
-  // function updates the UCI option ("name") to the given value ("value").
-
-  void setoption(istringstream& is) {
-
-    string token, name, value;
-
-    is >> token; // Consume "name" token
-
-    // Read option name (can contain spaces)
-    while (is >> token && token != "value")
-        name += string(" ", !name.empty()) + token;
-
-    // Read option value (can contain spaces)
-    while (is >> token)
-        value += string(" ", !value.empty()) + token;
-
-    if (Options.count(name))
-        Options[name] = value;
-    else
-        sync_cout << "No such option: " << name << sync_endl;
-  }
-
-
-  // go() is called when engine receives the "go" UCI command. The function sets
-  // the thinking time and other parameters from the input string, and starts
-  // the search.
 
   void go(const Position& pos, istringstream& is) {
 

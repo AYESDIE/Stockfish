@@ -42,8 +42,8 @@ class Option {
 
 public:
   Option(Fn* = NULL);
-  Option(bool v, Fn* = NULL);
-  Option(const char* v, Fn* = NULL);
+  // Option(bool v, Fn* = NULL);
+  // Option(const char* v, Fn* = NULL);
   Option(int v, int min, int max, Fn* = NULL);
 
   Option& operator=(const std::string& v);
