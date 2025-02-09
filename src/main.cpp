@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
   Eval::init();
   Pawns::init();
   Threads.init();
-  TT.resize(Options["Hash"]);
+  TT.resize(1);
 
   UCI::loop(argc, argv);
 
