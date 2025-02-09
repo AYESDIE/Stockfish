@@ -1,0 +1,1 @@
+cd src && make clean && make build ARCH=x86-32 && make strip && tar -czvf submission.tar.gz ./stockfish && ls -lh submission* && ls -lh *.o

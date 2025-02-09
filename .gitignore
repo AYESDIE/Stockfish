@@ -1,3 +1,6 @@
 src/*.o
 massif*
 *.zip
+*.tar.gz
+src/stockfish
+*.depend

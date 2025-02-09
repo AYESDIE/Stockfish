@@ -284,7 +284,7 @@ endif
 ifeq ($(optimize),yes)
 
 	ifeq ($(comp),gcc)
-		CXXFLAGS += -O3
+		CXXFLAGS += -Os
 
 		ifeq ($(os),osx)
 			ifeq ($(arch),i386)
@@ -301,20 +301,20 @@ ifeq ($(optimize),yes)
 	endif
 
 	ifeq ($(comp),mingw)
-		CXXFLAGS += -O3
+		CXXFLAGS += -Os
 	endif
 
 	ifeq ($(comp),icc)
 		ifeq ($(os),osx)
 			CXXFLAGS += -fast -mdynamic-no-pic
 		else
-			CXXFLAGS += -O3
+			CXXFLAGS += -Os
 		endif
 	endif
 
 	ifeq ($(comp),clang)
 		### -O4 requires a linker that supports LLVM's LTO
-		CXXFLAGS += -O3
+		CXXFLAGS += -Os
 
 		ifeq ($(os),osx)
 			ifeq ($(arch),i386)
