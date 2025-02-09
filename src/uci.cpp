@@ -40,7 +40,7 @@ namespace {
   // position just before to start searching). Needed by repetition draw detection.
   Search::StateStackPtr SetupStates;
 
-  void setoption(istringstream& up);
+  //void setoption(istringstream& up);
   void position(Position& pos, istringstream& up);
   void go(const Position& pos, istringstream& up);
 }
@@ -71,17 +71,14 @@ void UCI::loop(const string& args) {
           // waiting for 'ponderhit' to stop the search (for instance because we
           // already ran out of time), otherwise we should continue searching but
           // switching from pondering to normal search.
-          if (token != "ponderhit" || Search::Signals.stopOnPonderhit)
+          if (Search::Signals.stopOnPonderhit)
           {
               Search::Signals.stop = true;
               Threads.main()->notify_one(); // Could be sleeping
           }
-          else
-              Search::Limits.ponder = false;
       }
       else if (token == "uci")
-          sync_cout << "\n"       << Options
-                    << "\nuciok"  << sync_endl;
+          sync_cout << "\nuciok"  << sync_endl;
 
       else if (token == "go")         go(pos, is);
       else if (token == "position")   position(pos, is);
@@ -148,7 +145,6 @@ namespace {
         else if (token == "movetime")  is >> limits.movetime;
         else if (token == "mate")      is >> limits.mate;
         else if (token == "infinite")  limits.infinite = true;
-        else if (token == "ponder")    limits.ponder = true;
     }
 
     Threads.start_thinking(pos, limits, searchMoves, SetupStates);

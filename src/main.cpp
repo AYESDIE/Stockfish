@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
   Search::init();
   Eval::init();
   Threads.init();
-  TT.set_size(Options["Hash"]);
+  TT.set_size(2);
 
   std::string args;
 

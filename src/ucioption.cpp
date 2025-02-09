@@ -36,8 +36,8 @@ namespace UCI {
 
 
 void on_eval(const Option&) { Eval::init(); }
-void on_hash_size(const Option& o) { TT.set_size(o); }
-void on_clear_hash(const Option&) { TT.clear(); }
+// void on_hash_size(const Option& o) { TT.set_size(o); }
+// void on_clear_hash(const Option&) { TT.clear(); }
 
 
 /// Our case insensitive less() function as required by UCI protocol
@@ -51,33 +51,33 @@ bool CaseInsensitiveLess::operator() (const string& s1, const string& s2) const 
 /// init() initializes the UCI options to their hard coded default values
 
 void init(OptionsMap& o) {
-  o["Hash"]                        = Option(2, 1, 4, on_hash_size);
-  o["Clear Hash"]                  = Option(on_clear_hash);
+  //o["Hash"]                        = Option(2, 1, 4, on_hash_size);
+  //o["Clear Hash"]                  = Option(on_clear_hash);
 }
 
 
 /// operator<<() is used to print all the options default values in chronological
 /// insertion order (the idx field) and in the format defined by the UCI protocol.
 
-std::ostream& operator<<(std::ostream& os, const OptionsMap& om) {
+// std::ostream& operator<<(std::ostream& os, const OptionsMap& om) {
 
-  for (size_t idx = 0; idx < om.size(); idx++)
-      for (OptionsMap::const_iterator it = om.begin(); it != om.end(); ++it)
-          if (it->second.idx == idx)
-          {
-              const Option& o = it->second;
-              os << "\noption name " << it->first << " type " << o.type;
+//   for (size_t idx = 0; idx < om.size(); idx++)
+//       for (OptionsMap::const_iterator it = om.begin(); it != om.end(); ++it)
+//           if (it->second.idx == idx)
+//           {
+//               const Option& o = it->second;
+//               os << "\noption name " << it->first << " type " << o.type;
 
-              if (o.type != "button")
-                  os << " default " << o.defaultValue;
+//               if (o.type != "button")
+//                   os << " default " << o.defaultValue;
 
-              if (o.type == "spin")
-                  os << " min " << o.min << " max " << o.max;
+//               if (o.type == "spin")
+//                   os << " min " << o.min << " max " << o.max;
 
-              break;
-          }
-  return os;
-}
+//               break;
+//           }
+//   return os;
+// }
 
 
 /// Option c'tors and conversion operators
@@ -88,44 +88,44 @@ std::ostream& operator<<(std::ostream& os, const OptionsMap& om) {
 // Option::Option(bool v, Fn* f) : type("check"), min(0), max(0), idx(Options.size()), on_change(f)
 // { defaultValue = currentValue = (v ? "true" : "false"); }
 
-Option::Option(Fn* f) : type("button"), min(0), max(0), idx(Options.size()), on_change(f)
-{}
+// Option::Option(Fn* f) : type("button"), min(0), max(0), idx(Options.size()), on_change(f)
+// {}
 
-Option::Option(int v, int minv, int maxv, Fn* f) : type("spin"), min(minv), max(maxv), idx(Options.size()), on_change(f)
-{ std::ostringstream ss; ss << v; defaultValue = currentValue = ss.str(); }
+// Option::Option(int v, int minv, int maxv, Fn* f) : type("spin"), min(minv), max(maxv), idx(Options.size()), on_change(f)
+// { std::ostringstream ss; ss << v; defaultValue = currentValue = ss.str(); }
 
 
-Option::operator int() const {
-  assert(type == "check" || type == "spin");
-  return (type == "spin" ? atoi(currentValue.c_str()) : currentValue == "true");
-}
+// Option::operator int() const {
+//   assert(type == "check" || type == "spin");
+//   return (type == "spin" ? atoi(currentValue.c_str()) : currentValue == "true");
+// }
 
-Option::operator std::string() const {
-  assert(type == "string");
-  return currentValue;
-}
+// Option::operator std::string() const {
+//   assert(type == "string");
+//   return currentValue;
+// }
 
 
 /// operator=() updates currentValue and triggers on_change() action. It's up to
 /// the GUI to check for option's limits, but we could receive the new value from
 /// the user by console window, so let's check the bounds anyway.
 
-Option& Option::operator=(const string& v) {
+// Option& Option::operator=(const string& v) {
 
-  assert(!type.empty());
+//   assert(!type.empty());
 
-  if (   (type != "button" && v.empty())
-      || (type == "check" && v != "true" && v != "false")
-      || (type == "spin" && (atoi(v.c_str()) < min || atoi(v.c_str()) > max)))
-      return *this;
+//   if (   (type != "button" && v.empty())
+//       || (type == "check" && v != "true" && v != "false")
+//       || (type == "spin" && (atoi(v.c_str()) < min || atoi(v.c_str()) > max)))
+//       return *this;
 
-  if (type != "button")
-      currentValue = v;
+//   if (type != "button")
+//       currentValue = v;
 
-  if (on_change)
-      (*on_change)(*this);
+//   if (on_change)
+//       (*on_change)(*this);
 
-  return *this;
-}
+//   return *this;
+// }
 
 } // namespace UCI

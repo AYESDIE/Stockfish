@@ -41,17 +41,17 @@ class Option {
   typedef void (Fn)(const Option&);
 
 public:
-  Option(Fn* = NULL);
-  // Option(bool v, Fn* = NULL);
-  // Option(const char* v, Fn* = NULL);
-  Option(int v, int min, int max, Fn* = NULL);
+  // Option(Fn* = NULL);
+  // // Option(bool v, Fn* = NULL);
+  // // Option(const char* v, Fn* = NULL);
+  // Option(int v, int min, int max, Fn* = NULL);
 
-  Option& operator=(const std::string& v);
-  operator int() const;
-  operator std::string() const;
+  //Option& operator=(const std::string& v);
+  // operator int() const;
+  // operator std::string() const;
 
 private:
-  friend std::ostream& operator<<(std::ostream&, const OptionsMap&);
+  //friend std::ostream& operator<<(std::ostream&, const OptionsMap&);
 
   std::string defaultValue, currentValue, type;
   int min, max;

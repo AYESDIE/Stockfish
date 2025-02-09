@@ -210,7 +210,7 @@ finalize:
   // we shouldn't print the best move before the GUI sends a "stop" or "ponderhit"
   // command. We simply wait here until GUI sends one of those commands (that
   // raise Signals.stop).
-  if (!Signals.stop && (Limits.ponder || Limits.infinite))
+  if (!Signals.stop && (Limits.infinite))
   {
       Signals.stopOnPonderhit = true;
       RootPos.this_thread()->wait_for(Signals.stop);
@@ -385,9 +385,6 @@ namespace {
             {
                 // If we are allowed to ponder do not stop the search now but
                 // keep pondering until GUI sends "ponderhit" or "stop".
-                if (Limits.ponder)
-                    Signals.stopOnPonderhit = true;
-                else
                     Signals.stop = true;
             }
         }
@@ -1677,9 +1674,6 @@ void check_time() {
   {
       lastInfoTime = Time::now();
   }
-
-  if (Limits.ponder)
-      return;
 
   if (Limits.nodes)
   {
