@@ -181,9 +181,6 @@ public:
   void set_nodes_searched(int64_t n);
   bool is_draw() const;
 
-  // Position consistency check, for debugging
-  bool pos_is_ok(int* failedStep = NULL) const;
-
 private:
   // Initialization helpers (used while setting up a position)
   void clear();

@@ -125,26 +125,6 @@ Square msb(Bitboard b) {
 #endif // ifndef USE_BSFQ
 
 
-/// Bitboards::print() prints a bitboard in an easily readable format to the
-/// standard output. This is sometimes useful for debugging.
-
-void Bitboards::print(Bitboard b) {
-
-  sync_cout;
-
-  for (Rank rank = RANK_8; rank >= RANK_1; rank--)
-  {
-      std::cout << "+---+---+---+---+---+---+---+---+" << '\n';
-
-      for (File file = FILE_A; file <= FILE_H; file++)
-          std::cout << "| " << (b & (file | rank) ? "X " : "  ");
-
-      std::cout << "|\n";
-  }
-  std::cout << "+---+---+---+---+---+---+---+---+" << sync_endl;
-}
-
-
 /// Bitboards::init() initializes various bitboard arrays. It is called during
 /// program initialization.
 

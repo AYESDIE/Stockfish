@@ -168,8 +168,6 @@ Position& Position::operator=(const Position& pos) {
   st = &startState;
   nodes = 0;
 
-  assert(pos_is_ok());
-
   return *this;
 }
 
@@ -295,7 +293,6 @@ void Position::set(const string& fenStr, Thread* th) {
   st->checkersBB = attackers_to(king_square(sideToMove)) & pieces(~sideToMove);
   thisThread = th;
 
-  assert(pos_is_ok());
 }
 
 
@@ -909,7 +906,6 @@ void Position::do_move(Move m, StateInfo& newSt, const CheckInfo& ci, bool moveI
 
   sideToMove = ~sideToMove;
 
-  assert(pos_is_ok());
 }
 
 
@@ -979,7 +975,6 @@ void Position::undo_move(Move m) {
   st = st->previous;
   gamePly--;
 
-  assert(pos_is_ok());
 }
 
 
@@ -1022,8 +1017,6 @@ void Position::do_null_move(StateInfo& newSt) {
   st->pliesFromNull = 0;
 
   sideToMove = ~sideToMove;
-
-  assert(pos_is_ok());
 }
 
 void Position::undo_null_move() {
@@ -1294,128 +1287,4 @@ bool Position::is_draw() const {
 
 static char toggle_case(char c) {
   return char(islower(c) ? toupper(c) : tolower(c));
-}
-
-/// Position::pos_is_ok() performs some consitency checks for the position object.
-/// This is meant to be helpful when debugging.
-
-bool Position::pos_is_ok(int* failedStep) const {
-
-  int dummy, *step = failedStep ? failedStep : &dummy;
-
-  // What features of the position should be verified?
-  const bool all = false;
-
-  const bool debugBitboards       = all || false;
-  const bool debugKingCount       = all || false;
-  const bool debugKingCapture     = all || false;
-  const bool debugCheckerCount    = all || false;
-  const bool debugKey             = all || false;
-  const bool debugMaterialKey     = all || false;
-  const bool debugPawnKey         = all || false;
-  const bool debugIncrementalEval = all || false;
-  const bool debugNonPawnMaterial = all || false;
-  const bool debugPieceCounts     = all || false;
-  const bool debugPieceList       = all || false;
-  const bool debugCastleSquares   = all || false;
-
-  *step = 1;
-
-  if (sideToMove != WHITE && sideToMove != BLACK)
-      return false;
-
-  if ((*step)++, piece_on(king_square(WHITE)) != W_KING)
-      return false;
-
-  if ((*step)++, piece_on(king_square(BLACK)) != B_KING)
-      return false;
-
-  if ((*step)++, debugKingCount)
-  {
-      int kingCount[COLOR_NB] = {};
-
-      for (Square s = SQ_A1; s <= SQ_H8; s++)
-          if (type_of(piece_on(s)) == KING)
-              kingCount[color_of(piece_on(s))]++;
-
-      if (kingCount[0] != 1 || kingCount[1] != 1)
-          return false;
-  }
-
-  if ((*step)++, debugKingCapture)
-      if (attackers_to(king_square(~sideToMove)) & pieces(sideToMove))
-          return false;
-
-  if ((*step)++, debugCheckerCount && popcount<Full>(st->checkersBB) > 2)
-      return false;
-
-  if ((*step)++, debugBitboards)
-  {
-      // The intersection of the white and black pieces must be empty
-      if (pieces(WHITE) & pieces(BLACK))
-          return false;
-
-      // The union of the white and black pieces must be equal to all
-      // occupied squares
-      if ((pieces(WHITE) | pieces(BLACK)) != pieces())
-          return false;
-
-      // Separate piece type bitboards must have empty intersections
-      for (PieceType p1 = PAWN; p1 <= KING; p1++)
-          for (PieceType p2 = PAWN; p2 <= KING; p2++)
-              if (p1 != p2 && (pieces(p1) & pieces(p2)))
-                  return false;
-  }
-
-  if ((*step)++, ep_square() != SQ_NONE && relative_rank(sideToMove, ep_square()) != RANK_6)
-      return false;
-
-  if ((*step)++, debugKey && st->key != compute_key())
-      return false;
-
-  if ((*step)++, debugPawnKey && st->pawnKey != compute_pawn_key())
-      return false;
-
-  if ((*step)++, debugMaterialKey && st->materialKey != compute_material_key())
-      return false;
-
-  if ((*step)++, debugIncrementalEval && st->psq != compute_psq_score())
-      return false;
-
-  if ((*step)++, debugNonPawnMaterial)
-      if (   st->npMaterial[WHITE] != compute_non_pawn_material(WHITE)
-          || st->npMaterial[BLACK] != compute_non_pawn_material(BLACK))
-          return false;
-
-  if ((*step)++, debugPieceCounts)
-      for (Color c = WHITE; c <= BLACK; c++)
-          for (PieceType pt = PAWN; pt <= KING; pt++)
-              if (pieceCount[c][pt] != popcount<Full>(pieces(c, pt)))
-                  return false;
-
-  if ((*step)++, debugPieceList)
-      for (Color c = WHITE; c <= BLACK; c++)
-          for (PieceType pt = PAWN; pt <= KING; pt++)
-              for (int i = 0; i < pieceCount[c][pt]; i++)
-                  if (   board[pieceList[c][pt][i]] != make_piece(c, pt)
-                      || index[pieceList[c][pt][i]] != i)
-                      return false;
-
-  if ((*step)++, debugCastleSquares)
-      for (Color c = WHITE; c <= BLACK; c++)
-          for (CastlingSide s = KING_SIDE; s <= QUEEN_SIDE; s = CastlingSide(s + 1))
-          {
-              CastleRight cr = make_castle_right(c, s);
-
-              if (!can_castle(cr))
-                  continue;
-
-              if (  (castleRightsMask[king_square(c)] & cr) != cr
-                  || piece_on(castleRookSquare[c][s]) != make_piece(c, ROOK)
-                  || castleRightsMask[castleRookSquare[c][s]] != cr)
-                  return false;
-          }
-
-  *step = 0;
-  return true;
 }

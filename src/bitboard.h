@@ -26,7 +26,6 @@
 namespace Bitboards {
 
 void init();
-void print(Bitboard b);
 
 }
 

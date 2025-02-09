@@ -262,7 +262,6 @@ void Thread::split(Position& pos, const Stack* ss, Value alpha, Value beta, Valu
                    Move* bestMove, Depth depth, Move threatMove, int moveCount,
                    MovePicker* movePicker, int nodeType, bool cutNode) {
 
-  assert(pos.pos_is_ok());
   assert(*bestValue <= alpha && alpha < beta && beta <= VALUE_INFINITE);
   assert(*bestValue > -VALUE_INFINITE);
   assert(depth >= Threads.minimumSplitDepth);

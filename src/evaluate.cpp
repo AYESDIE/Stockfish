@@ -270,14 +270,6 @@ namespace Eval {
   }
 
 
-  /// trace() is like evaluate() but instead of a value returns a string suitable
-  /// to be print on stdout with the detailed descriptions and values of each
-  /// evaluation term. Used mainly for debugging.
-  std::string trace(const Position& pos) {
-    return Tracing::do_trace(pos);
-  }
-
-
   /// init() computes evaluation weights from the corresponding UCI parameters
   /// and setup king tables.
 

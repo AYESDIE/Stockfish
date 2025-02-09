@@ -158,30 +158,6 @@ void Search::init() {
   }
 }
 
-
-/// Search::perft() is our utility to verify move generation. All the leaf nodes
-/// up to the given depth are generated and counted and the sum returned.
-
-static size_t perft(Position& pos, Depth depth) {
-
-  StateInfo st;
-  size_t cnt = 0;
-  CheckInfo ci(pos);
-  const bool leaf = depth == 2 * ONE_PLY;
-
-  for (MoveList<LEGAL> it(pos); *it; ++it)
-  {
-      pos.do_move(*it, st, ci, pos.move_gives_check(*it, ci));
-      cnt += leaf ? MoveList<LEGAL>(pos).size() : ::perft(pos, depth - ONE_PLY);
-      pos.undo_move(*it);
-  }
-  return cnt;
-}
-
-size_t Search::perft(Position& pos, Depth depth) {
-  return depth > ONE_PLY ? ::perft(pos, depth) : MoveList<LEGAL>(pos).size();
-}
-
 /// Search::think() is the external interface to Stockfish's search, and is
 /// called by the main thread when the program receives the UCI 'go' command. It
 /// searches from RootPos and at the end prints the "bestmove" to output.
