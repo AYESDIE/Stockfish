@@ -56,7 +56,7 @@ void init(OptionsMap& o) {
 
   o["Contempt"]              << Option(0, -100, 100);
   o["Threads"]               << Option(1, 1, 128, on_threads);
-  o["Hash"]                  << Option(16, 1, MaxHashMB, on_hash_size);
+  o["Hash"]                  << Option(1, 1, 4, on_hash_size);
 }
 
 
