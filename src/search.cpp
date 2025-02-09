@@ -146,6 +146,18 @@ namespace {
 
 /// Search::init() is called during startup to initialize various lookup tables
 
+void Search::clear() {
+
+  TT.clear();
+  CounterMovesHistory.clear();
+
+  for (Thread* th : Threads)
+  {
+      th->history.clear();
+      th->counterMoves.clear();
+  }
+}
+
 void Search::init() {
 
   const double K[][2] = {{ 0.799, 2.281 }, { 0.484, 3.023 }};
