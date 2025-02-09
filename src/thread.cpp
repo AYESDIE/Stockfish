@@ -189,7 +189,6 @@ void ThreadPool::init() {
   sleepWhileIdle = true;
   timer = new_thread<TimerThread>();
   push_back(new_thread<MainThread>());
-  read_uci_options();
 }
 
 
@@ -202,38 +201,6 @@ void ThreadPool::exit() {
   for (iterator it = begin(); it != end(); ++it)
       delete_thread(*it);
 }
-
-
-// read_uci_options() updates internal threads parameters from the corresponding
-// UCI options and creates/destroys threads to match the requested number. Thread
-// objects are dynamically allocated to avoid creating in advance all possible
-// threads, with included pawns and material tables, if only few are used.
-
-void ThreadPool::read_uci_options() {
-
-  maxThreadsPerSplitPoint = 5;
-  minimumSplitDepth       = DEPTH_ZERO;
-  size_t requested        = 1;
-
-  assert(requested > 0);
-
-  // Value 0 has a special meaning: We determine the optimal minimum split depth
-  // automatically. Anyhow the minimumSplitDepth should never be under 4 plies.
-  if (!minimumSplitDepth)
-      minimumSplitDepth = (requested < 8 ? 4 : 7) * ONE_PLY;
-  else
-      minimumSplitDepth = std::max(4 * ONE_PLY, minimumSplitDepth);
-
-  while (size() < requested)
-      push_back(new_thread<Thread>());
-
-  while (size() > requested)
-  {
-      delete_thread(back());
-      pop_back();
-  }
-}
-
 
 // slave_available() tries to find an idle thread which is available as a slave
 // for the thread 'master'.

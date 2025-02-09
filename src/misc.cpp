@@ -30,35 +30,6 @@ using namespace std;
 /// format DD-MM-YY, is shown in engine_info.
 static const string Version = "4";
 
-
-/// engine_info() returns the full name of the current Stockfish version. This
-/// will be either "Stockfish <Tag> DD-MM-YY" (where DD-MM-YY is the date when
-/// the program was compiled) or "Stockfish <Version>", depending on whether
-/// Version is empty.
-
-const string engine_info(bool to_uci) {
-
-  const string months("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec");
-  string month, day, year;
-  stringstream s, date(__DATE__); // From compiler, format is "Sep 21 2008"
-
-  s << "Stockfish " << Version << setfill('0');
-
-  if (Version.empty())
-  {
-      date >> month >> day >> year;
-      s << setw(2) << day << setw(2) << (1 + months.find(month) / 4) << year.substr(2);
-  }
-
-  s << (Is64Bit ? " 64" : "")
-    << (HasPopCnt ? " SSE4.2" : "")
-    << (to_uci ? "\nid author ": " by ")
-    << "Tord Romstad, Marco Costalba and Joona Kiiski";
-
-  return s.str();
-}
-
-
 /// Our fancy logging facility. The trick here is to replace cin.rdbuf() and
 /// cout.rdbuf() with two Tie objects that tie cin and cout to a file stream. We
 /// can toggle the logging of std::cout and std:cin at runtime while preserving

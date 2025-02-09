@@ -183,7 +183,7 @@ void Search::think() {
   for (size_t i = 0; i < Threads.size(); i++)
       Threads[i]->maxPly = 0;
 
-  Threads.sleepWhileIdle = Options["Idle Threads Sleep"];
+  Threads.sleepWhileIdle = false;
 
   // Set best timer interval to avoid lagging under time pressure. Timer is
   // used to check for remaining available thinking time.

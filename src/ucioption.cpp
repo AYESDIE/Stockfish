@@ -36,7 +36,6 @@ namespace UCI {
 
 
 void on_eval(const Option&) { Eval::init(); }
-void on_threads(const Option&) { Threads.read_uci_options(); }
 void on_hash_size(const Option& o) { TT.set_size(o); }
 void on_clear_hash(const Option&) { TT.clear(); }
 
@@ -52,14 +51,8 @@ bool CaseInsensitiveLess::operator() (const string& s1, const string& s2) const 
 /// init() initializes the UCI options to their hard coded default values
 
 void init(OptionsMap& o) {
-  o["Search Log Filename"]         = Option("SearchLog.txt");
-  o["Min Split Depth"]             = Option(0, 0, 12, on_threads);
-  o["Max Threads per Split Point"] = Option(5, 4,  8, on_threads);
-  o["Threads"]                     = Option(1, 1, MAX_THREADS, on_threads);
-  o["Idle Threads Sleep"]          = Option(false);
   o["Hash"]                        = Option(2, 1, 4, on_hash_size);
   o["Clear Hash"]                  = Option(on_clear_hash);
-  o["Ponder"]                      = Option(false);
 }
 
 

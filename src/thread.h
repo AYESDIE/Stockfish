@@ -159,7 +159,6 @@ struct ThreadPool : public std::vector<Thread*> {
   void exit(); // be initialized and valid during the whole thread lifetime.
 
   MainThread* main() { return static_cast<MainThread*>((*this)[0]); }
-  void read_uci_options();
   Thread* available_slave(const Thread* master) const;
   void wait_for_think_finished();
   void start_thinking(const Position&, const Search::LimitsType&,

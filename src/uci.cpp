@@ -80,8 +80,7 @@ void UCI::loop(const string& args) {
               Search::Limits.ponder = false;
       }
       else if (token == "uci")
-          sync_cout << "id name " << engine_info(true)
-                    << "\n"       << Options
+          sync_cout << "\n"       << Options
                     << "\nuciok"  << sync_endl;
 
       else if (token == "go")         go(pos, is);
