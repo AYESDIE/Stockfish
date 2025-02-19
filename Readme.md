@@ -1,3 +1,10 @@
+### KG2 Mini Stockfish
+
+Final submissions to [Kaggle Competition](https://www.kaggle.com/competitions/fide-google-efficiency-chess-ai-challenge/leaderboard) 
+
+-------------------------------------------
+
+
 ### Overview
 
 Stockfish is a free UCI chess engine derived from Glaurung 2.1. It is
